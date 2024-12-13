@@ -1,14 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import UserComp from './mysql_integration/UserComp';
+// import UserComp from './mysql_integration/UserComp';
 import reportWebVitals from './reportWebVitals';
+// import RefComp from './hooks/RefComp';
+import Myform from './hooks/Myform';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     {/* <App /> */}
-    <UserComp />
+    {/* <UserComp /> */}
+    {/* <RefComp /> */}
+    {/* <Changebackground /> */}
+    <Myform />
+    {/* <IncrementDecrement /> */}
   </React.StrictMode>
 );
 
