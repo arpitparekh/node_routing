@@ -2,6 +2,11 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import mysql from 'mysql2';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // api routes
 // cors and body parser is a middleware
@@ -12,6 +17,13 @@ const port = 3000;
 // add middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'build')));
+
+// React routing fallback
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 
 const db = mysql.createConnection({
   host: 'localhost',
@@ -41,6 +53,7 @@ db.connect((err) => {
     });
   }
 });
+
 
 app.get('/users', (req, res) => {
   const sql = 'SELECT * FROM users';
