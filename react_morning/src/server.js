@@ -3,14 +3,13 @@ import cors from 'cors';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { Pool } from 'pg';
+import pkg from 'pg'; // Import the entire `pg` package as a default export
+const { Pool } = pkg; // Destructure `Pool` from the imported `pg`
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // API routes
-// CORS and body parser are middleware
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -25,14 +24,13 @@ app.get('*', (req, res) => {
 });
 
 // PostgreSQL connection using `pg`
-const db = new Pool({
+const pool = new Pool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT || 5432,
   database: process.env.DB_NAME,
 });
-
 
 // Check the database connection
 pool.connect((err, client, release) => {
