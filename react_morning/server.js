@@ -1,20 +1,20 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
-import mysql from 'mysql2';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Pool } from 'pg';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// api routes
-// cors and body parser is a middleware
+// API routes
+// CORS and body parser are middleware
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// add middleware
+// Add middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'build')));
@@ -24,29 +24,32 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Walden0042$$',
-  database: 'react_learning',
+// PostgreSQL connection using `pg`
+const pool = new Pool({
+  host: 'dpg-ctds3flumphs7397vg9g-a',
+  user: 'arpit_mydatabase_user',
+  password: 'jQjTaXiuxfP3cepcWmjgKMxdEU4gxX6x',
+  port: 5432,
+  database: 'arpit_mydatabase',
 });
 
-db.connect((err) => {
+// Check the database connection
+pool.connect((err, client, release) => {
   if (err) {
-    console.log(err);
+    console.error('Error connecting to PostgreSQL:', err.stack);
   } else {
-    console.log('MySQL Connected...');
-    // create table
+    console.log('PostgreSQL Connected...');
+    // Create table
     const sql = `CREATE TABLE IF NOT EXISTS users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL,
       password VARCHAR(255) NOT NULL
     )`;
-    db.query(sql, (err, result) => {
+    client.query(sql, (err, result) => {
+      release(); // Release the client back to the pool
       if (err) {
-        console.log(err);
+        console.error('Error creating table:', err);
       } else {
         console.log('Table created');
       }
@@ -54,33 +57,35 @@ db.connect((err) => {
   }
 });
 
-
+// GET /users route
 app.get('/users', (req, res) => {
   const sql = 'SELECT * FROM users';
-  db.query(sql, (err, result) => {
+  pool.query(sql, (err, result) => {
     if (err) {
-      console.log(err);
+      console.error('Error retrieving users:', err);
       res.status(500).send('Error retrieving users');
     } else {
-      res.json(result);
+      res.json(result.rows); // PostgreSQL uses `rows` for query results
     }
   });
 });
 
+// POST /addUser route
 app.post('/addUser', (req, res) => {
   const { name, email, password } = req.body;
-  const sql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-  db.query(sql, [name, email, password], (err, result) => {
+  const sql =
+    'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *';
+  pool.query(sql, [name, email, password], (err, result) => {
     if (err) {
-      console.log(err);
+      console.error('Error creating user:', err);
       res.status(500).send('Error creating user');
     } else {
-      res.json(result);
+      res.json(result.rows[0]); // Return the inserted user
     }
   });
 });
 
-// run server
+// Run server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
