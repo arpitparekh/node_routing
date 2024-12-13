@@ -25,13 +25,14 @@ app.get('*', (req, res) => {
 });
 
 // PostgreSQL connection using `pg`
-const pool = new Pool({
-  host: 'dpg-ctds3flumphs7397vg9g-a',
-  user: 'arpit_mydatabase_user',
-  password: 'jQjTaXiuxfP3cepcWmjgKMxdEU4gxX6x',
-  port: 5432,
-  database: 'arpit_mydatabase',
+const db = new Pool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT || 5432,
+  database: process.env.DB_NAME,
 });
+
 
 // Check the database connection
 pool.connect((err, client, release) => {
