@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 
 // API routes
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3002;
 
 // Add middleware
 app.use(cors());
