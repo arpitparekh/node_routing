@@ -14,14 +14,24 @@ export default function UserComp() {
 
   useEffect(() => {
     axios
-      .get('https://node-routing-n249.onrender.com/users') // Updated endpoint
+      .get('https://node-routing-n249.onrender.com/users')
       .then((response) => {
-        setUsers(response.data);
+        console.log('API Response:', response.data); // Inspect the API response
+        if (Array.isArray(response.data)) {
+          setUsers(response.data); // Only set if it's an array
+        } else {
+          console.error('Expected an array, got:', response.data);
+          setUsers([]); // Default to empty array
+        }
       })
       .catch((error) => {
         console.error('Error fetching users:', error.message);
+        setUsers([]); // Default to empty array on error
       });
-  }, [click]); // Re-run effect when `click` changes
+  }, [click]);
+
+
+
   function onNameChange(e) {
     setName(e.target.value);
   }
@@ -108,9 +118,15 @@ export default function UserComp() {
 
         <div>
           <ul>
-            {users.map((user) => {
-              return <li key={user.id}>{user.name}</li>;
-            })}
+            {Array.isArray(users) && users.length > 0 ? (
+              users.map((user) => (
+                <li key={user.id}>
+                  {user.name} - {user.email}
+                </li>
+              ))
+            ) : (
+              <p>No users found.</p>
+            )}
           </ul>
         </div>
       </form>

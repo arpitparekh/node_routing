@@ -66,7 +66,7 @@ app.get('/users', (req, res) => {
       console.error('Error retrieving users:', err);
       res.status(500).send('Error retrieving users');
     } else {
-      res.json(result.rows); // PostgreSQL uses `rows` for query results
+      res.json(result.rows || []); // Ensure it always returns an array
     }
   });
 });
