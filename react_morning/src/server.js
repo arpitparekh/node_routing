@@ -16,10 +16,11 @@ const port = process.env.PORT || 3002;
 
 // Add CORS middleware
 const corsOptions = {
-  origin:
-    process.env.NODE_ENV === 'production'
-      ? ['https://node-routing-n249.onrender.com']
-      : ['http://localhost:3000'],
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3002',
+    'https://your-production-domain.com',
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 };
@@ -92,7 +93,7 @@ app.post('/addUser', (req, res) => {
 });
 
 // React app fallback
-app.get('*', (req, res) => {
+app.use('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
