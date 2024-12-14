@@ -4,6 +4,7 @@ import './index.css';
 // import UserComp from './mysql_integration/UserComp';
 // import RefComp from './hooks/RefComp';
 import Myform from './hooks/Myform.js';  // Add the .js extension
+import UserComp from './mysql_integration/UserComp.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,6 +14,7 @@ root.render(
     {/* <RefComp /> */}
     {/* <Changebackground /> */}
     <Myform />
+    <UserComp/>
     {/* <IncrementDecrement /> */}
   </React.StrictMode>
 );
