@@ -2,8 +2,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import pkg from 'pg'; // Import the entire `pg` package as a default export
+import { fileURLToPath } from 'url';
 const { Pool } = pkg; // Destructure `Pool` from the imported `pg`
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,7 +14,13 @@ const app = express();
 const port = process.env.PORT || 3002;
 
 // Add middleware
-app.use(cors());
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://node-routing-n249.onrender.com'], // Allow these origins
+  methods: 'GET,POST,PUT,DELETE',
+  credentials: true, // Allow credentials if needed
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
@@ -57,7 +63,7 @@ pool.connect((err, client, release) => {
 });
 
 // GET /users route
-app.get('/users', (req, res) => {
+app.get('https://node-routing-n249.onrender.com/Users', (req, res) => {
   const sql = 'SELECT * FROM users';
   pool.query(sql, (err, result) => {
     if (err) {
@@ -70,7 +76,7 @@ app.get('/users', (req, res) => {
 });
 
 // POST /addUser route
-app.post('/addUser', (req, res) => {
+app.post('https://node-routing-n249.onrender.com/addUser', (req, res) => {
   const { name, email, password } = req.body;
   const sql =
     'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *';
