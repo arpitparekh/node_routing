@@ -4,6 +4,7 @@ import express from 'express';
 import path from 'path';
 import pkg from 'pg'; // Import the entire `pg` package as a default export
 import { fileURLToPath } from 'url';
+
 const { Pool } = pkg; // Destructure `Pool` from the imported `pg`
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,21 +14,16 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3002;
 
-// Add middleware
+// Add CORS middleware
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://node-routing-n249.onrender.com'], // Allow these origins
-  methods: 'GET,POST,PUT,DELETE',
-  credentials: true, // Allow credentials if needed
+  origin: ['http://localhost:3000', 'https://node-routing-n249.onrender.com'], // Allowed origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  credentials: true, // Allow credentials
 };
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'build')));
-
-// React routing fallback
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
 
 // PostgreSQL connection using `pg`
 const pool = new Pool({
@@ -51,7 +47,7 @@ pool.connect((err, client, release) => {
       email VARCHAR(255) NOT NULL,
       password VARCHAR(255) NOT NULL
     )`;
-    client.query(sql, (err, result) => {
+    client.query(sql, (err) => {
       release(); // Release the client back to the pool
       if (err) {
         console.error('Error creating table:', err);
@@ -63,7 +59,7 @@ pool.connect((err, client, release) => {
 });
 
 // GET /users route
-app.get('https://node-routing-n249.onrender.com/Users', (req, res) => {
+app.get('/users', (req, res) => {
   const sql = 'SELECT * FROM users';
   pool.query(sql, (err, result) => {
     if (err) {
@@ -76,7 +72,7 @@ app.get('https://node-routing-n249.onrender.com/Users', (req, res) => {
 });
 
 // POST /addUser route
-app.post('https://node-routing-n249.onrender.com/addUser', (req, res) => {
+app.post('/addUser', (req, res) => {
   const { name, email, password } = req.body;
   const sql =
     'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *';
@@ -88,6 +84,11 @@ app.post('https://node-routing-n249.onrender.com/addUser', (req, res) => {
       res.json(result.rows[0]); // Return the inserted user
     }
   });
+});
+
+// React routing fallback
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // Run server

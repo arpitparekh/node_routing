@@ -6,24 +6,28 @@ export default function UserComp() {
   // http://localhost:3000/users
   // state variable
   const [users, setUsers] = useState([]);
-  const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setconfirmPassword] = useState('')
-  const [click, setClick] = useState(0)
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setconfirmPassword] = useState('');
+  const [click, setClick] = useState(0);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/users').then((response) => {
-      setUsers(response.data);
-    });
-  }, [click]);
-
+    axios
+      .get('https://node-routing-n249.onrender.com/users') // Updated endpoint
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching users:', error.message);
+      });
+  }, [click]); // Re-run effect when `click` changes
   function onNameChange(e) {
-    setName(e.target.value)
+    setName(e.target.value);
   }
 
   function onEmailChange(e) {
-    setEmail(e.target.value)
+    setEmail(e.target.value);
   }
 
   function onPasswordChange(e) {
@@ -47,7 +51,6 @@ export default function UserComp() {
         console.log(response.data);
       });
     console.log(email, name, password, confirmPassword);
-
   }
 
   return (
