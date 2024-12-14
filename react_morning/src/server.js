@@ -64,12 +64,14 @@ pool.connect((err, client, release) => {
 
 // GET /users route
 app.get('/users', (req, res) => {
+  console.log('GET /users called');
   const sql = 'SELECT * FROM users';
   pool.query(sql, (err, result) => {
     if (err) {
       console.error('Error retrieving users:', err);
       res.status(500).send('Error retrieving users');
     } else {
+      console.log('Users retrieved:', result.rows);
       res.json(result.rows || []); // Ensure it always returns an array
     }
   });
