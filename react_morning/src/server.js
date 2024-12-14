@@ -16,12 +16,16 @@ const port = process.env.PORT || 3002;
 
 // Add CORS middleware
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://node-routing-n249.onrender.com'], // Allowed origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-  credentials: true, // Allow credentials
+  origin:
+    process.env.NODE_ENV === 'production'
+      ? ['https://node-routing-n249.onrender.com']
+      : ['http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
