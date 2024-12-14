@@ -75,7 +75,6 @@ app.get('/users', (req, res) => {
   });
 });
 
-// POST /addUser route
 app.post('/addUser', (req, res) => {
   const { name, email, password } = req.body;
   const sql =
@@ -90,7 +89,7 @@ app.post('/addUser', (req, res) => {
   });
 });
 
-// React routing fallback
+// React app fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
