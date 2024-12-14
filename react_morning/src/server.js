@@ -28,17 +28,34 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 // API routes BEFORE static file serving
+// Explicitly handle /users route BEFORE static serving
 app.get('/users', (req, res) => {
-  console.log('GET /users called');
+  console.log('Accessing /users route directly');
+
+  // Add more verbose logging
+  console.log('Full request details:', {
+    method: req.method,
+    url: req.url,
+    headers: req.headers
+  });
+
   const sql = 'SELECT * FROM users';
   pool.query(sql, (err, result) => {
     if (err) {
-      console.error('Error retrieving users:', err);
-      res.status(500).json({ error: 'Error retrieving users' });
-    } else {
-      console.log('Users retrieved:', result.rows);
-      res.json(result.rows || []); // Ensure it always returns an array
+      console.error('Detailed error retrieving users:', err);
+      return res.status(500).json({
+        error: 'Error retrieving users',
+        details: err.message
+      });
     }
+
+    console.log('Users query result:', {
+      rowCount: result.rowCount,
+      rows: result.rows
+    });
+
+    // Ensure array is returned
+    res.json(result.rows || []);
   });
 });
 

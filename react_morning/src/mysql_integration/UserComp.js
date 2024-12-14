@@ -18,23 +18,36 @@ export default function UserComp() {
     process.env.REACT_APP_BACKEND_URL || 'http://localhost:3002';
 
   // Fetch users
+  const axiosInstance = axios.create({
+    baseURL: process.env.REACT_APP_BACKEND_URL || 'http://localhost:3002',
+    timeout: 5000,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  // Use this instead of axios directly
   useEffect(() => {
-    axios
-      .get(`${BACKEND_URL}/users`)
+    axiosInstance
+      .get('/users')
       .then((response) => {
-        console.log('API Response:', response.data);
+        console.log('Full API Response:', response);
         if (Array.isArray(response.data)) {
           setUsers(response.data);
         } else {
-          console.error('Expected an array, got:', response.data);
+          console.error('Unexpected response structure:', response);
           setUsers([]);
         }
       })
       .catch((error) => {
-        console.error('Error fetching users:', error.message);
+        console.error('Detailed fetch error:', {
+          message: error.message,
+          response: error.response,
+          request: error.request,
+        });
         setUsers([]);
       });
-  }, [click, BACKEND_URL]);
+  }, [click]);
 
   // Form Handlers
   const onNameChange = (e) => setName(e.target.value);
