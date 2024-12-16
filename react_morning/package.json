@@ -21,6 +21,7 @@
     "serve": "^14.2.4",
     "sql": "^0.78.0"
   },
+  "proxy": "http://localhost:3002",
   "scripts": {
      "start": "node src/server.js",
     "build": "react-scripts build",
