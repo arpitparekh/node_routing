@@ -56,8 +56,8 @@ app.post('/insert', async (req, res) => {
 // Fetch data route
 app.get('/data', async (req, res) => {
   try {
-    const result = await client.query('SELECT * FROM students');
-    res.json(result.rows);
+    const result = await client.query('SELECT id, name, description FROM students');
+    res.json(result.rows); // Return array of rows
   } catch (err) {
     console.error('Error fetching data:', err);
     res.status(500).send('Database query failed');
