@@ -3,10 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 // import UserComp from './mysql_integration/UserComp';
 // import RefComp from './hooks/RefComp';
-import Myform from './hooks/Myform.js';  // Add the .js extension
-import UserComp from './mysql_integration/UserComp.js';
+// import Myform from './hooks/Myform.js';  // Add the .js extension
+// import UserComp from './mysql_integration/UserComp.js';
+// import Changebackground from './hooks/ChangeBackground.js';
+// import IncrementDecrement from './hooks/IncrementDecrement.js';
+import AddUser from './mysql_integration/AddUser.js';
+import UsersList from './mysql_integration/UserList.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+
 root.render(
   <React.StrictMode>
     {/* <App /> */}
@@ -14,8 +20,8 @@ root.render(
     {/* <RefComp /> */}
     {/* <Changebackground /> */}
     <div>
-      <AddUser onUserAdded={handleUserAdded} />
-      <UsersList key={refreshTrigger} />
+      <AddUser />
+      <UsersList />
     </div>
     {/* <IncrementDecrement /> */}
   </React.StrictMode>

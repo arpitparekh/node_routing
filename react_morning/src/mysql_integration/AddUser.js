@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './mycss.css';
 
-const AddUser = ({ onUserAdded }) => {
+const AddUser = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
@@ -17,7 +16,7 @@ const AddUser = ({ onUserAdded }) => {
         setName('');
         setDescription('');
         // Trigger parent component refresh
-        onUserAdded();
+
       })
       .catch((error) => console.error('Error adding user:', error));
   };
