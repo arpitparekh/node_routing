@@ -13,8 +13,10 @@ root.render(
     {/* <UserComp /> */}
     {/* <RefComp /> */}
     {/* <Changebackground /> */}
-    <Myform />
-    <UserComp/>
+    <div>
+      <AddUser onUserAdded={handleUserAdded} />
+      <UsersList key={refreshTrigger} />
+    </div>
     {/* <IncrementDecrement /> */}
   </React.StrictMode>
 );
